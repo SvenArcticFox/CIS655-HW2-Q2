@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import reactLogo from './assets/react.svg';
 import viteLogo from '/vite.svg';
 import './App.css';
@@ -130,11 +130,85 @@ export default function App() {
 
     setFlagListState(tempFlags);
   }));
+  
+  const [selectedOperation, setSelectedOperation] = useState(instructionList[0].name);
+  const [selectedReturnParam, setSelectedReturnParam] = useState('');
+  const [selectedParam1, setSelectedParam1] = useState('');
+  const [selectedParam2, setSelectedParam2] = useState('');
 
   const [count, setCount] = useState(0);
 
+  const executeInstruction = useCallback(() => {
+    console.log(`Operation: ${selectedOperation}. Return Param: ${selectedReturnParam}. Param 1: ${selectedParam1}. Param 2: ${selectedParam2}`);
+  }, [selectedOperation, selectedReturnParam, selectedParam1, selectedParam2])
+
   return (
     <>
+      <label htmlFor='operation' >Select Operation:</label>
+      <select
+        name='operation'
+        value={selectedOperation}
+        onChange={(e) => {
+          setSelectedOperation(e.target.value);
+        }}
+      >
+        {instructionList.map((instruction) => {
+          return <option key={instruction.opcode} value={instruction.name}>{instruction.name}</option>
+        })}
+      </select>
+
+      <label htmlFor='returnParam'>Select Return Parameter:</label>
+      <select
+        name='returnParam'
+        value={selectedReturnParam}
+        onChange={(e) => {
+          setSelectedReturnParam(e.target.value);
+        }}
+      >
+        <option value={undefined}>None</option>
+        {registerListState.map((register) => (
+          <option key={register.binaryAddress} value={register.name}>{register.name}</option>
+        ))}
+        {memoryVarListState.map((memvar) => (
+          <option key={memvar.binaryAddress} value={memvar.name}>{memvar.name}</option>
+        ))}
+      </select>
+
+      
+      <label htmlFor='param1'>Select Parameter 1:</label>
+      <select
+        name='param1'
+        value={selectedParam1}
+        onChange={(e) => {
+          setSelectedParam1(e.target.value);
+        }}
+      >
+        <option value={undefined}>None</option>
+        {registerListState.map((register) => (
+          <option key={register.binaryAddress} value={register.name}>{register.name}</option>
+        ))}
+        {memoryVarListState.map((memvar) => (
+          <option key={memvar.binaryAddress} value={memvar.name}>{memvar.name}</option>
+        ))}
+      </select>
+
+      <label htmlFor='param2'>Select Parameter 2:</label>
+      <select
+        name='param2'
+        value={selectedParam2}
+        onChange={(e) => {
+          setSelectedParam2(e.target.value);
+        }}
+      >
+        <option value={undefined}>None</option>
+        {registerListState.map((register) => (
+          <option key={register.binaryAddress} value={register.name}>{register.name}</option>
+        ))}
+        {memoryVarListState.map((memvar) => (
+          <option key={memvar.binaryAddress} value={memvar.name}>{memvar.name}</option>
+        ))}
+      </select>
+      <button onClick={executeInstruction}>Execute Instruction</button>
       <div>
         <a href="https://vite.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
@@ -145,7 +219,7 @@ export default function App() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
+        <button onClick={() => {setCount((count) => count + 1)}}>
           count is {count}
         </button>
         <p>
