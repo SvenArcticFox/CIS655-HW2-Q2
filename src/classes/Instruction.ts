@@ -9,7 +9,7 @@ export type MemoryToRegisterFunction = (returnRegister: Register, memoryParam: M
 export type RegisterToMemoryFunction = (returnMemory: MemoryVariable, registerParam: Register) => MemoryVariable;
 export type InputToRegisterFunction = (returnRegister: Register, inputParam: number) => Register;
 export type ShiftRegisterFunction = (returnRegister: Register, inputRegister: Register, shiftCount: number) => Register;
-export type CompareRegisterFunction = (param1: Register, param2: Register) => void;
+export type CompareRegisterFunction = (param1: Register, param2: Register) => number;
 
 export class Instruction {
     opcode: string;

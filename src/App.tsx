@@ -120,15 +120,19 @@ export default function App() {
 
     if (param1.value < param2.value) {
       tempFlags[1].status = true;
+      return 1;
     }
     else if (param1.value > param2.value) {
       tempFlags[0].status = true;
+      return 0;
     }
     else if (param1.value === param2.value) {
       tempFlags[2].status = true;
+      return 2;
     }
 
     setFlagListState(tempFlags);
+    return -1;
   }));
   
   const [selectedOperation, setSelectedOperation] = useState(instructionList[0].name);
