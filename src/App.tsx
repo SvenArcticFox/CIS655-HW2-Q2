@@ -7,7 +7,7 @@ import { MemoryVariable } from './classes/MemoryVariable';
 import { Instruction } from './classes/Instruction';
 import { Flag } from './classes/Flag';
 
-function App() {
+export default function App() {
 
   const [previousInstructions, setPreviousInstructions] = useState([]);
 
@@ -158,5 +158,3 @@ function App() {
     </>
   )
 }
-
-export default App
