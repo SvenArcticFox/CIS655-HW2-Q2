@@ -6,6 +6,7 @@ import { Register } from './classes/Register';
 import { MemoryVariable } from './classes/MemoryVariable';
 import { Instruction } from './classes/Instruction';
 import { Flag } from './classes/Flag';
+import BinaryToHex from './functions/BinaryToHex';
 
 export default function App() {
 
@@ -17,7 +18,7 @@ export default function App() {
     new Register('0001', 'R1', 0),
     new Register('0010', 'R2', 0),
     new Register('0011', 'R3', 0),
-    new Register('0108', 'R4', 0),
+    new Register('0100', 'R4', 0),
     new Register('0101', 'R5', 0),
     new Register('0110', 'R6', 0),
   ]);
@@ -139,80 +140,124 @@ export default function App() {
   const [selectedReturnParam, setSelectedReturnParam] = useState('');
   const [selectedParam1, setSelectedParam1] = useState('');
   const [selectedParam2, setSelectedParam2] = useState('');
+  const [inputParam, setInputParam] = useState('');
 
   const [count, setCount] = useState(0);
 
   const executeInstruction = useCallback(() => {
-    console.log(`Operation: ${selectedOperation}. Return Param: ${selectedReturnParam}. Param 1: ${selectedParam1}. Param 2: ${selectedParam2}`);
-  }, [selectedOperation, selectedReturnParam, selectedParam1, selectedParam2])
+    console.log(`Operation: ${selectedOperation}. Return Param: ${selectedReturnParam}. Param 1: ${selectedParam1}. Param 2: ${selectedParam2}. Input Param: ${inputParam}.`);
+  }, [selectedOperation, selectedReturnParam, selectedParam1, selectedParam2, inputParam])
 
   return (
     <>
-      <label htmlFor='operation' >Select Operation:</label>
-      <select
-        name='operation'
-        value={selectedOperation}
-        onChange={(e) => {
-          setSelectedOperation(e.target.value);
-        }}
-      >
-        {instructionList.map((instruction) => {
-          return <option key={instruction.opcode} value={instruction.name}>{instruction.name}</option>
-        })}
-      </select>
+      <div>
+        <label htmlFor='operation' >Select Operation:</label>
+        <select
+          name='operation'
+          value={selectedOperation}
+          onChange={(e) => {
+            setSelectedOperation(e.target.value);
+          }}
+        >
+          {instructionList.map((instruction) => {
+            return <option key={instruction.opcode} value={instruction.name}>{instruction.name}</option>
+          })}
+        </select>
 
-      <label htmlFor='returnParam'>Select Return Parameter:</label>
-      <select
-        name='returnParam'
-        value={selectedReturnParam}
-        onChange={(e) => {
-          setSelectedReturnParam(e.target.value);
-        }}
-      >
-        <option value={''}>None</option>
-        {registerListState.map((register) => (
-          <option key={register.binaryAddress} value={register.name}>{register.name}</option>
-        ))}
-        {memoryVarListState.map((memvar) => (
-          <option key={memvar.binaryAddress} value={memvar.name}>{memvar.name}</option>
-        ))}
-      </select>
+        <label htmlFor='returnParam'>Select Return Parameter:</label>
+        <select
+          name='returnParam'
+          value={selectedReturnParam}
+          onChange={(e) => {
+            setSelectedReturnParam(e.target.value);
+          }}
+        >
+          <option value={''}>None</option>
+          {registerListState.map((register) => (
+            <option key={register.binaryAddress} value={register.name}>{register.name}</option>
+          ))}
+          {memoryVarListState.map((memvar) => (
+            <option key={memvar.binaryAddress} value={memvar.name}>{memvar.name}</option>
+          ))}
+        </select>
 
+        
+        <label htmlFor='param1'>Select Parameter 1:</label>
+        <select
+          name='param1'
+          value={selectedParam1}
+          onChange={(e) => {
+            setSelectedParam1(e.target.value);
+          }}
+        >
+          <option value={''}>None</option>
+          {registerListState.map((register) => (
+            <option key={register.binaryAddress} value={register.name}>{register.name}</option>
+          ))}
+          {memoryVarListState.map((memvar) => (
+            <option key={memvar.binaryAddress} value={memvar.name}>{memvar.name}</option>
+          ))}
+        </select>
+
+        <label htmlFor='param2'>Select Parameter 2:</label>
+        <select
+          name='param2'
+          value={selectedParam2}
+          onChange={(e) => {
+            setSelectedParam2(e.target.value);
+          }}
+        >
+          <option value={''}>None</option>
+          {registerListState.map((register) => (
+            <option key={register.binaryAddress} value={register.name}>{register.name}</option>
+          ))}
+          {memoryVarListState.map((memvar) => (
+            <option key={memvar.binaryAddress} value={memvar.name}>{memvar.name}</option>
+          ))}
+        </select>
+        <input 
+          name='inputParam' 
+          value={inputParam} 
+          placeholder='Number Input Parameter'
+          type='number'
+          onChange={(e) => setInputParam(e.target.value)}
+          >
+          </input>
+        <button onClick={executeInstruction}>Execute Instruction</button>
+      </div>
       
-      <label htmlFor='param1'>Select Parameter 1:</label>
-      <select
-        name='param1'
-        value={selectedParam1}
-        onChange={(e) => {
-          setSelectedParam1(e.target.value);
-        }}
-      >
-        <option value={''}>None</option>
-        {registerListState.map((register) => (
-          <option key={register.binaryAddress} value={register.name}>{register.name}</option>
-        ))}
-        {memoryVarListState.map((memvar) => (
-          <option key={memvar.binaryAddress} value={memvar.name}>{memvar.name}</option>
-        ))}
-      </select>
+      <div className='register-list-container'>
+          <p className='register-list-header'>Registers</p>
+          <p className='register-name-header'>Name</p>
+          <p className='register-address-binary-header'>Binary Address</p>
+          <p className='register-address-hex-header'>Hex Address</p>
+          <p className='register-value-header'>Value</p>
+          {registerListState.map((register) => (
+            <>
+              <p className='register-name'>{register.name}</p>
+              <p className='register-binary-address'>{register.binaryAddress}</p>
+              <p className='register-hex-address'>{BinaryToHex(register.binaryAddress)}</p>
+              <p className='register-value'>{register.value}</p>
+            </>
+          ))}
+      </div>
 
-      <label htmlFor='param2'>Select Parameter 2:</label>
-      <select
-        name='param2'
-        value={selectedParam2}
-        onChange={(e) => {
-          setSelectedParam2(e.target.value);
-        }}
-      >
-        <option value={''}>None</option>
-        {registerListState.map((register) => (
-          <option key={register.binaryAddress} value={register.name}>{register.name}</option>
-        ))}
-        {memoryVarListState.map((memvar) => (
-          <option key={memvar.binaryAddress} value={memvar.name}>{memvar.name}</option>
-        ))}
-      </select>
-      <button onClick={executeInstruction}>Execute Instruction</button>
+      <div className='memory-address-list-container'>
+          <p className='memory-address-list-header'>Memory Addresses</p>
+          <p className='memory-address-name-header'>Name</p>
+          <p className='memory-address-address-binary-header'>Binary Address</p>
+          <p className='memory-address-address-hex-header'>Hex Address</p>
+          <p className='memory-address-value-header'>Value</p>
+          {memoryVarListState.map((memVar) => (
+            <>
+              <p className='memory-address-name'>{memVar.name}</p>
+              <p className='memory-address-binary-address'>{memVar.binaryAddress}</p>
+              <p className='memory-address-hex-address'>{BinaryToHex(memVar.binaryAddress)}</p>
+              <p className='memory-address-value'>{memVar.value}</p>
+            </>
+          ))}
+      </div>
+
       <div>
         <a href="https://vite.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
