@@ -151,7 +151,7 @@ export default function App() {
   return (
     <>
       <div>
-        <label htmlFor='operation' >Select Operation:</label>
+        <label htmlFor='operation' >Operation:</label>
         <select
           name='operation'
           value={selectedOperation}
@@ -164,7 +164,7 @@ export default function App() {
           })}
         </select>
 
-        <label htmlFor='returnParam'>Select Return Parameter:</label>
+        <label htmlFor='returnParam'>Return Parameter:</label>
         <select
           name='returnParam'
           value={selectedReturnParam}
@@ -182,7 +182,7 @@ export default function App() {
         </select>
 
         
-        <label htmlFor='param1'>Select Parameter 1:</label>
+        <label htmlFor='param1'>Parameter 1:</label>
         <select
           name='param1'
           value={selectedParam1}
@@ -199,7 +199,7 @@ export default function App() {
           ))}
         </select>
 
-        <label htmlFor='param2'>Select Parameter 2:</label>
+        <label htmlFor='param2'>Parameter 2:</label>
         <select
           name='param2'
           value={selectedParam2}
@@ -215,10 +215,11 @@ export default function App() {
             <option key={memvar.binaryAddress} value={memvar.name}>{memvar.name}</option>
           ))}
         </select>
+        <label htmlFor='inputParam'>Input Parameter:</label>
         <input 
           name='inputParam' 
           value={inputParam} 
-          placeholder='Number Input Parameter'
+          placeholder='Number Inputs Only'
           type='number'
           onChange={(e) => setInputParam(e.target.value)}
           >
