@@ -229,33 +229,38 @@ export default function App() {
       
       <div className='register-list-container'>
           <p className='register-list-header'>Registers</p>
-          <p className='register-name-header'>Name</p>
-          <p className='register-address-binary-header'>Binary Address</p>
-          <p className='register-address-hex-header'>Hex Address</p>
-          <p className='register-value-header'>Value</p>
+          <div className='register-list-header-container'>
+            <p className='register-name-header'>Name</p>
+            <p className='register-address-binary-header'>Binary Address</p>
+            <p className='register-address-hex-header'>Hex Address</p>
+            <p className='register-value-header'>Value</p>
+          </div>
           {registerListState.map((register) => (
-            <>
+            <div key={register.name} className='register-container'>
               <p className='register-name'>{register.name}</p>
               <p className='register-binary-address'>{register.binaryAddress}</p>
               <p className='register-hex-address'>{BinaryToHex(register.binaryAddress)}</p>
               <p className='register-value'>{register.value}</p>
-            </>
+            </div>
           ))}
       </div>
 
       <div className='memory-address-list-container'>
-          <p className='memory-address-list-header'>Memory Addresses</p>
-          <p className='memory-address-name-header'>Name</p>
-          <p className='memory-address-address-binary-header'>Binary Address</p>
-          <p className='memory-address-address-hex-header'>Hex Address</p>
-          <p className='memory-address-value-header'>Value</p>
+        <p className='memory-address-list-header'>Memory Addresses</p>
+          <div className='memory-address-list-header-container'>
+            <p className='memory-address-name-header'>Name</p>
+            <p className='memory-address-address-binary-header'>Binary Address</p>
+            <p className='memory-address-address-hex-header'>Hex Address</p>
+            <p className='memory-address-value-header'>Value</p>
+          </div>
+
           {memoryVarListState.map((memVar) => (
-            <>
+            <div key={memVar.name} className='memory-address-container'>
               <p className='memory-address-name'>{memVar.name}</p>
               <p className='memory-address-binary-address'>{memVar.binaryAddress}</p>
               <p className='memory-address-hex-address'>{BinaryToHex(memVar.binaryAddress)}</p>
               <p className='memory-address-value'>{memVar.value}</p>
-            </>
+            </div>
           ))}
       </div>
 
