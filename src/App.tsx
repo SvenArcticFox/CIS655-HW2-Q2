@@ -165,7 +165,7 @@ export default function App() {
           setSelectedReturnParam(e.target.value);
         }}
       >
-        <option value={undefined}>None</option>
+        <option value={''}>None</option>
         {registerListState.map((register) => (
           <option key={register.binaryAddress} value={register.name}>{register.name}</option>
         ))}
@@ -183,7 +183,7 @@ export default function App() {
           setSelectedParam1(e.target.value);
         }}
       >
-        <option value={undefined}>None</option>
+        <option value={''}>None</option>
         {registerListState.map((register) => (
           <option key={register.binaryAddress} value={register.name}>{register.name}</option>
         ))}
@@ -200,7 +200,7 @@ export default function App() {
           setSelectedParam2(e.target.value);
         }}
       >
-        <option value={undefined}>None</option>
+        <option value={''}>None</option>
         {registerListState.map((register) => (
           <option key={register.binaryAddress} value={register.name}>{register.name}</option>
         ))}
