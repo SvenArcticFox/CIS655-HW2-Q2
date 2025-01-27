@@ -302,13 +302,13 @@ export default function App() {
         <p className='flag-list-header'>Flags</p>
           <div className='flag-list-header-container'>
             <p className='flag-name-header'>Name</p>
-            <p className='flag-status-header-'>status</p>
+            <p className='flag-status-header-'>Status</p>
           </div>
 
           {flagListState.map((flag) => (
             <div key={flag.name} className='flag-container'>
               <p className='flag-name'>{flag.name}</p>
-              <p className='flag-status'>{flag.status}</p>
+              <p className='flag-status'>{flag.status ? '1' : '0'}</p>
             </div>
           ))}
       </div>
