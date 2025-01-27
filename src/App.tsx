@@ -1,29 +1,28 @@
 import { useCallback, useState } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
 import './App.css';
 import { Register } from './classes/Register';
 import { MemoryVariable } from './classes/MemoryVariable';
-import { Instruction } from './classes/Instruction';
+import { Instruction, PreviousInstruction} from './classes/Instruction';
 import { Flag } from './classes/Flag';
 import BinaryToHex from './functions/BinaryToHex';
 
+
 export default function App() {
 
-  const [previousInstructions, setPreviousInstructions] = useState([]);
+  const [previousInstructions, setPreviousInstructions] = useState(new Array<PreviousInstruction>);
 
   const instructionList: Instruction[] = [];
 
-  const [registerListState, setRegisterListState] = useState([
-    new Register('0001', 'R1', 0),
-    new Register('0010', 'R2', 0),
+  const [registerListState] = useState([
+    new Register('0001', 'R1', 1),
+    new Register('0010', 'R2', 1),
     new Register('0011', 'R3', 0),
     new Register('0100', 'R4', 0),
     new Register('0101', 'R5', 0),
     new Register('0110', 'R6', 0),
   ]);
 
-  const [memoryVarListState, setMemoryVarListState] = useState([
+  const [memoryVarListState] = useState([
     new MemoryVariable('1001', 'M1', 0),
     new MemoryVariable('1010', 'M2', 0),
     new MemoryVariable('1011', 'M3', 0),
@@ -39,14 +38,14 @@ export default function App() {
     new Flag('ZE'),
   ]);
 
-  instructionList.push(new Instruction('0001', 'ADD', (returnRegister: Register, param1: Register, param2: Register) => {
-    returnRegister.value = param1.value + param2.value;
-    if (returnRegister.value === 0) {
+  instructionList.push(new Instruction('0001', 'ADD', (returnParam: Register, param1: Register, param2: Register) => {
+    returnParam.value = param1.value + param2.value;
+    if (returnParam.value === 0) {
       const tempFlags = flagListState.slice();
       tempFlags[3].status = true;
       setFlagListState(tempFlags);
     }
-    return returnRegister;
+    return returnParam;
   }));
   instructionList.push(new Instruction('0010', 'SUB', (returnRegister: Register, param1: Register, param2: Register) => {
     returnRegister.value = param1.value - param2.value;
@@ -142,11 +141,43 @@ export default function App() {
   const [selectedParam2, setSelectedParam2] = useState('');
   const [inputParam, setInputParam] = useState('');
 
-  const [count, setCount] = useState(0);
-
   const executeInstruction = useCallback(() => {
-    console.log(`Operation: ${selectedOperation}. Return Param: ${selectedReturnParam}. Param 1: ${selectedParam1}. Param 2: ${selectedParam2}. Input Param: ${inputParam}.`);
-  }, [selectedOperation, selectedReturnParam, selectedParam1, selectedParam2, inputParam])
+    const tempFlags = flagListState.slice();
+
+    tempFlags.forEach((flag) => flag.status = false);
+    setFlagListState(tempFlags);
+
+    const instruction = instructionList.find((instruction) => instruction.name === selectedOperation);
+    const returnParam = registerListState.find((register) => register.name === selectedReturnParam);
+    const param1 = registerListState.find((register) => register.name === selectedParam1);
+    const param2 = registerListState.find((register) => register.name === selectedParam2);
+    let previousInstruction = new PreviousInstruction();
+
+    if (selectedOperation.toUpperCase() === 'ADD' || selectedOperation.toUpperCase() === 'SUB' 
+      || selectedOperation.toUpperCase() === 'MPY' || selectedOperation.toUpperCase() === 'DIV'
+      || selectedOperation.toUpperCase() === 'MOD') {
+      if (selectedReturnParam.split('')[0].toUpperCase() === 'R' && selectedParam1.split('')[0].toUpperCase() === 'R'
+        && selectedParam2.split('')[0].toUpperCase() === 'R') {
+
+
+          if (instruction && returnParam && param1 && param2) {
+              instruction.operation(returnParam, param1 as number & Register & MemoryVariable, param2 as Register & number);
+              previousInstruction = {
+                name: `${instruction.name} ${returnParam.name} ${param1.name} ${param2.name}`,
+                hex: `0x${BinaryToHex(instruction.opcode)}${BinaryToHex(returnParam.binaryAddress)}${BinaryToHex(param1.binaryAddress)}${BinaryToHex(param2.binaryAddress)}`
+              }
+          }
+
+        }
+    }
+    const tempPrevInstructs = previousInstructions.slice();
+    tempPrevInstructs.push(previousInstruction);
+    setPreviousInstructions(tempPrevInstructs);
+
+
+  }, [selectedOperation, selectedReturnParam, selectedParam1, selectedParam2, 
+    inputParam, memoryVarListState, registerListState, flagListState, setFlagListState, 
+    instructionList, previousInstructions, setPreviousInstructions]);
 
   return (
     <>
@@ -264,26 +295,6 @@ export default function App() {
           ))}
       </div>
 
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => {setCount((count) => count + 1)}}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   )
 }
