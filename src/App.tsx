@@ -142,6 +142,9 @@ export default function App() {
   const [inputParam, setInputParam] = useState('');
 
   const executeInstruction = useCallback(() => {
+
+    // Make sure to call one of the set state functions
+    // so that the results actually render.
     const tempFlags = flagListState.slice();
 
     tempFlags.forEach((flag) => flag.status = false);
@@ -291,6 +294,36 @@ export default function App() {
               <p className='memory-address-binary-address'>{memVar.binaryAddress}</p>
               <p className='memory-address-hex-address'>{BinaryToHex(memVar.binaryAddress)}</p>
               <p className='memory-address-value'>{memVar.value}</p>
+            </div>
+          ))}
+      </div>
+
+      <div className='flag-list-container'>
+        <p className='flag-list-header'>Flags</p>
+          <div className='flag-list-header-container'>
+            <p className='flag-name-header'>Name</p>
+            <p className='flag-status-header-'>status</p>
+          </div>
+
+          {flagListState.map((flag) => (
+            <div key={flag.name} className='flag-container'>
+              <p className='flag-name'>{flag.name}</p>
+              <p className='flag-status'>{flag.status}</p>
+            </div>
+          ))}
+      </div>
+
+      <div className='previous-instructions-list-container'>
+        <p className='previous-instructions-list-header'>Previous Instructions</p>
+          <div className='previous-instructions-list-header-container'>
+            <p className='previous-instructions-name-header'>Code</p>
+            <p className='previous-instructions-hex-header'>Hex</p>
+          </div>
+
+          {previousInstructions.map((prevInst) => (
+            <div key={Math.random()} className='previous-instruction-container'>
+              <p className='previous-instruction-name'>{prevInst.name}</p>
+              <p className='previous-instruction-hex'>{prevInst.hex}</p>
             </div>
           ))}
       </div>
