@@ -174,7 +174,7 @@ export default function App() {
         }
     }
 
-    if (instruction?.name.toUpperCase() === 'SHIFTL' || instruction?.name.toUpperCase() === 'SHIFTR') {
+    else if (instruction?.name.toUpperCase() === 'SHIFTL' || instruction?.name.toUpperCase() === 'SHIFTR') {
       if (returnParam?.name[0].toUpperCase() === 'R' && param1?.name[0].toUpperCase() === 'R' 
           && inputParam !== '') {
         if (instruction && returnParam && param1 && inputParam) {
@@ -183,6 +183,19 @@ export default function App() {
           previousInstruction = {
             name: `${instruction.name} ${returnParam.name} ${param1.name} ${inputParam}`,
             hex: `0x${BinaryToHex(instruction.opcode)}${BinaryToHex(returnParam.binaryAddress)}${BinaryToHex(param1.binaryAddress)}F`,
+          }
+        }
+      }
+    }
+
+    else if (instruction?.name.toUpperCase() === 'CMP') {
+      if (param1?.name[0].toUpperCase() === 'R' && param2?.name[0].toUpperCase() === 'R') {
+        if (instruction && param1 && param2) {
+          // fix error, works but won't build to production. Need 3 parameters, not two.
+          instruction.operation(param1, param2);
+          previousInstruction = {
+            name: `${instruction.name} ${param1.name} ${param2.name}`,
+            hex: `0x${BinaryToHex(instruction.opcode)}0${BinaryToHex(param1.binaryAddress)}${BinaryToHex(param2.binaryAddress)}`,
           }
         }
       }
