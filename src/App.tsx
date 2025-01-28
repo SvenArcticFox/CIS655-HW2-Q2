@@ -167,11 +167,25 @@ export default function App() {
               instruction.operation(returnParam, param1 as number & Register & MemoryVariable, param2 as Register & number);
               previousInstruction = {
                 name: `${instruction.name} ${returnParam.name} ${param1.name} ${param2.name}`,
-                hex: `0x${BinaryToHex(instruction.opcode)}${BinaryToHex(returnParam.binaryAddress)}${BinaryToHex(param1.binaryAddress)}${BinaryToHex(param2.binaryAddress)}`
+                hex: `0x${BinaryToHex(instruction.opcode)}${BinaryToHex(returnParam.binaryAddress)}${BinaryToHex(param1.binaryAddress)}${BinaryToHex(param2.binaryAddress)}`,
               }
           }
 
         }
+    }
+
+    if (instruction?.name.toUpperCase() === 'SHIFTL' || instruction?.name.toUpperCase() === 'SHIFTR') {
+      if (returnParam?.name[0].toUpperCase() === 'R' && param1?.name[0].toUpperCase() === 'R' 
+          && inputParam !== '') {
+        if (instruction && returnParam && param1 && inputParam) {
+          const numberInput = parseInt(inputParam);
+          instruction.operation(returnParam, param1 as Register & number & MemoryVariable, numberInput as number & Register);
+          previousInstruction = {
+            name: `${instruction.name} ${returnParam.name} ${param1.name} ${inputParam}`,
+            hex: `0x${BinaryToHex(instruction.opcode)}${BinaryToHex(returnParam.binaryAddress)}${BinaryToHex(param1.binaryAddress)}F`,
+          }
+        }
+      }
     }
     const tempPrevInstructs = previousInstructions.slice();
     tempPrevInstructs.push(previousInstruction);
