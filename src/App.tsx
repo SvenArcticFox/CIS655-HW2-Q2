@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import './App.css';
 import { Register } from './classes/Register';
 import { MemoryVariable } from './classes/MemoryVariable';
@@ -8,11 +8,11 @@ import BinaryToHex from './functions/BinaryToHex';
 
 
 export default function App() {
-
+  // Store previous instructions here
   const [previousInstructions, setPreviousInstructions] = useState(new Array<PreviousInstruction>);
 
-  const instructionList: Instruction[] = [];
-
+  // const instructionList: Instruction[] = [];
+  // Create Registers
   const [registerListState] = useState([
     new Register('0001', 'R1', 1),
     new Register('0010', 'R2', 1),
@@ -21,7 +21,7 @@ export default function App() {
     new Register('0101', 'R5', 0),
     new Register('0110', 'R6', 0),
   ]);
-
+  // Create Memory addresses
   const [memoryVarListState] = useState([
     new MemoryVariable('1001', 'M1', 0),
     new MemoryVariable('1010', 'M2', 0),
@@ -30,110 +30,120 @@ export default function App() {
     new MemoryVariable('1101', 'M5', 0),
     new MemoryVariable('1110', 'M6', 0),
   ]);
-
+  // Create Flags
   const [flagListState, setFlagListState] = useState([
     new Flag('GT'),
     new Flag('LT'),
     new Flag('EQ'),
     new Flag('ZE'),
   ]);
+  // Add instructions to the instruction list
+  const instructionList = useMemo(() => [
+    new Instruction('0001', 'ADD', (returnParam: Register, param1: Register, param2: Register) => {
+      returnParam.value = param1.value + param2.value;
+      if (returnParam.value === 0) {
+        const tempFlags = flagListState.slice();
+        tempFlags[3].status = true;
+        setFlagListState(tempFlags);
+      }
+      return returnParam;
+    }),
+    new Instruction('0010', 'SUB', (returnRegister: Register, param1: Register, param2: Register) => {
+      returnRegister.value = param1.value - param2.value;
+      if (returnRegister.value === 0) {
+        const tempFlags = flagListState.slice();
+        tempFlags[3].status = true;
+        setFlagListState(tempFlags);
+      }
+      return returnRegister;
+    }),
+    new Instruction('0011', 'MPY', (returnRegister: Register, param1: Register, param2: Register) => {
+      returnRegister.value = param1.value * param2.value;
+      if (returnRegister.value === 0) {
+        const tempFlags = flagListState.slice();
+        tempFlags[3].status = true;
+        setFlagListState(tempFlags);
+      }
+      return returnRegister;
+    }),
+    new Instruction('0100', 'DIV', (returnRegister: Register, param1: Register, param2: Register) => {
+      returnRegister.value = Math.floor(param1.value / param2.value);
+      if (returnRegister.value === 0) {
+        const tempFlags = flagListState.slice();
+        tempFlags[3].status = true;
+        setFlagListState(tempFlags);
+      }
+      return returnRegister;
+    }),
+    new Instruction('0101', 'MOD', (returnRegister: Register, param1: Register, param2: Register) => {
+      returnRegister.value = param1.value % param2.value;
+      if (returnRegister.value === 0) {
+        const tempFlags = flagListState.slice();
+        tempFlags[3].status = true;
+        setFlagListState(tempFlags);
+      }
+      return returnRegister;
+    }),
+    new Instruction('0110', 'LOAD', (returnRegister: Register, memoryParam: MemoryVariable, input?: number) => {
+      // keep linter happy
+      input = 0
+      returnRegister.value = memoryParam.value;
+      memoryParam.value = input;
+      return returnRegister;
+    }),
+    new Instruction('0111', 'LOADI', (returnRegister: Register, inputVar: Register | MemoryVariable, inputParam: number) => {
+      // keep linter happy
+      inputVar = new Register('', '' , inputParam);
+      returnRegister.value = inputVar.value;
+      return returnRegister;
+    }),
+    new Instruction('1000', 'STORE', (returnMemory: MemoryVariable, registerParam: Register, input?: number) => {
+      // keep linter happy
+      input = 0;
+      returnMemory.value = registerParam.value;
+      registerParam.value = input;
+      return returnMemory;
+    }),
+    new Instruction('1001', 'SHIFTL', (returnRegister: Register, registerParam: Register, shiftCount: number) => {
+      returnRegister.value = registerParam.value << shiftCount;
+      if (returnRegister.value === 0) {
+        const tempFlags = flagListState.slice();
+        tempFlags[3].status = true;
+        setFlagListState(tempFlags);
+      }
+      return returnRegister;
+    }),
+    new Instruction('1010', 'SHIFTR', (returnRegister: Register, registerParam: Register, shiftCount: number) => {
+      returnRegister.value = registerParam.value >>> shiftCount;
+      if (returnRegister.value === 0) {
+        const tempFlags = flagListState.slice();
+        tempFlags[3].status = true;
+        setFlagListState(tempFlags);
+      }
+      return returnRegister;
+    }),
+    new Instruction('1011', 'CMP', (param1: Register, param2: Register, input: number) => {
+      const tempFlags = flagListState.slice();
+  
+      if (param1.value < param2.value) {
+        tempFlags[1].status = true;
+        input = 1;
+      }
+      else if (param1.value > param2.value) {
+        tempFlags[0].status = true;
+        input = 0;
+      }
+      else if (param1.value === param2.value) {
+        tempFlags[2].status = true;
+        input = 2
+      }
+  
+      setFlagListState(tempFlags);
+      input = -1
+      return input;
+    })
 
-  instructionList.push(new Instruction('0001', 'ADD', (returnParam: Register, param1: Register, param2: Register) => {
-    returnParam.value = param1.value + param2.value;
-    if (returnParam.value === 0) {
-      const tempFlags = flagListState.slice();
-      tempFlags[3].status = true;
-      setFlagListState(tempFlags);
-    }
-    return returnParam;
-  }));
-  instructionList.push(new Instruction('0010', 'SUB', (returnRegister: Register, param1: Register, param2: Register) => {
-    returnRegister.value = param1.value - param2.value;
-    if (returnRegister.value === 0) {
-      const tempFlags = flagListState.slice();
-      tempFlags[3].status = true;
-      setFlagListState(tempFlags);
-    }
-    return returnRegister;
-  }));
-  instructionList.push(new Instruction('0011', 'MPY', (returnRegister: Register, param1: Register, param2: Register) => {
-    returnRegister.value = param1.value * param2.value;
-    if (returnRegister.value === 0) {
-      const tempFlags = flagListState.slice();
-      tempFlags[3].status = true;
-      setFlagListState(tempFlags);
-    }
-    return returnRegister;
-  }));
-  instructionList.push(new Instruction('0100', 'DIV', (returnRegister: Register, param1: Register, param2: Register) => {
-    returnRegister.value = Math.floor(param1.value / param2.value);
-    if (returnRegister.value === 0) {
-      const tempFlags = flagListState.slice();
-      tempFlags[3].status = true;
-      setFlagListState(tempFlags);
-    }
-    return returnRegister;
-  }));
-  instructionList.push(new Instruction('0101', 'MOD', (returnRegister: Register, param1: Register, param2: Register) => {
-    returnRegister.value = param1.value % param2.value;
-    if (returnRegister.value === 0) {
-      const tempFlags = flagListState.slice();
-      tempFlags[3].status = true;
-      setFlagListState(tempFlags);
-    }
-    return returnRegister;
-  }));
-  instructionList.push(new Instruction('0110', 'LOAD', (returnRegister: Register, memoryParam: MemoryVariable) => {
-    returnRegister.value = memoryParam.value;
-    memoryParam.value = 0;
-    return returnRegister;
-  }));
-  instructionList.push(new Instruction('0111', 'LOADI', (returnRegister: Register, inputParam: number) => {
-    returnRegister.value = inputParam;
-    return returnRegister;
-  }));
-  instructionList.push(new Instruction('1000', 'STORE', (returnMemory: MemoryVariable, registerParam: Register) => {
-    returnMemory.value = registerParam.value;
-    registerParam.value = 0;
-    return returnMemory;
-  }));
-  instructionList.push(new Instruction('1001', 'SHIFTL', (returnRegister: Register, registerParam: Register, shiftCount: number) => {
-    returnRegister.value = registerParam.value << shiftCount;
-    if (returnRegister.value === 0) {
-      const tempFlags = flagListState.slice();
-      tempFlags[3].status = true;
-      setFlagListState(tempFlags);
-    }
-    return returnRegister;
-  }));
-  instructionList.push(new Instruction('1010', 'SHIFTR', (returnRegister: Register, registerParam: Register, shiftCount: number) => {
-    returnRegister.value = registerParam.value >>> shiftCount;
-    if (returnRegister.value === 0) {
-      const tempFlags = flagListState.slice();
-      tempFlags[3].status = true;
-      setFlagListState(tempFlags);
-    }
-    return returnRegister;
-  }));
-  instructionList.push(new Instruction('1011', 'CMP', (param1: Register, param2: Register) => {
-    const tempFlags = flagListState.slice();
-
-    if (param1.value < param2.value) {
-      tempFlags[1].status = true;
-      return 1;
-    }
-    else if (param1.value > param2.value) {
-      tempFlags[0].status = true;
-      return 0;
-    }
-    else if (param1.value === param2.value) {
-      tempFlags[2].status = true;
-      return 2;
-    }
-
-    setFlagListState(tempFlags);
-    return -1;
-  }));
+  ], [flagListState]);
   
   const [selectedOperation, setSelectedOperation] = useState(instructionList[0].name);
   const [selectedReturnParam, setSelectedReturnParam] = useState('');
@@ -151,51 +161,100 @@ export default function App() {
     setFlagListState(tempFlags);
 
     const instruction = instructionList.find((instruction) => instruction.name === selectedOperation);
-    const returnParam = registerListState.find((register) => register.name === selectedReturnParam);
-    const param1 = registerListState.find((register) => register.name === selectedParam1);
-    const param2 = registerListState.find((register) => register.name === selectedParam2);
+    let returnParam = registerListState.find((register) => register.name === selectedReturnParam);
+    if (returnParam === undefined) {
+      returnParam = memoryVarListState.find((memVar) => memVar.name === selectedReturnParam); 
+    }
+    let param1 = registerListState.find((register) => register.name === selectedParam1);
+    if (param1 === undefined) {
+      param1 = memoryVarListState.find((memVar) => memVar.name === selectedParam1);
+    }
+    let param2 = registerListState.find((register) => register.name === selectedParam2);
+    if (param2 === undefined) {
+      param2 = memoryVarListState.find((memVar) => memVar.name === selectedParam2);
+    }
+
     let previousInstruction = new PreviousInstruction();
-
-    if (selectedOperation.toUpperCase() === 'ADD' || selectedOperation.toUpperCase() === 'SUB' 
-      || selectedOperation.toUpperCase() === 'MPY' || selectedOperation.toUpperCase() === 'DIV'
-      || selectedOperation.toUpperCase() === 'MOD') {
-      if (selectedReturnParam.split('')[0].toUpperCase() === 'R' && selectedParam1.split('')[0].toUpperCase() === 'R'
-        && selectedParam2.split('')[0].toUpperCase() === 'R') {
-
-
+    // Arithmetic Operations
+    if (instruction?.name.toUpperCase() === 'ADD' || instruction?.name.toUpperCase() === 'SUB' 
+      || instruction?.name.toUpperCase() === 'MPY' || instruction?.name.toUpperCase() === 'DIV'
+      || instruction?.name.toUpperCase() === 'MOD') {
+      if (returnParam?.name.split('')[0].toUpperCase() === 'R' && param1?.name.split('')[0].toUpperCase() === 'R'
+        && param2?.name.split('')[0].toUpperCase() === 'R') {
           if (instruction && returnParam && param1 && param2) {
-              instruction.operation(returnParam, param1 as number & Register & MemoryVariable, param2 as Register & number);
+              // type casting used to keep linter happy
+              instruction.operation(returnParam, param1, param2 as Register & number);
               previousInstruction = {
                 name: `${instruction.name} ${returnParam.name} ${param1.name} ${param2.name}`,
                 hex: `0x${BinaryToHex(instruction.opcode)}${BinaryToHex(returnParam.binaryAddress)}${BinaryToHex(param1.binaryAddress)}${BinaryToHex(param2.binaryAddress)}`,
               }
           }
-
-        }
+      }
     }
-
+    // Shift operations
     else if (instruction?.name.toUpperCase() === 'SHIFTL' || instruction?.name.toUpperCase() === 'SHIFTR') {
       if (returnParam?.name[0].toUpperCase() === 'R' && param1?.name[0].toUpperCase() === 'R' 
           && inputParam !== '') {
         if (instruction && returnParam && param1 && inputParam) {
           const numberInput = parseInt(inputParam);
-          instruction.operation(returnParam, param1 as Register & number & MemoryVariable, numberInput as number & Register);
+          // type casting used to keep linter happy
+          instruction.operation(returnParam, param1, numberInput as number & Register);
           previousInstruction = {
             name: `${instruction.name} ${returnParam.name} ${param1.name} ${inputParam}`,
+            // Have address F at the end to represent the input address as the second parameter
             hex: `0x${BinaryToHex(instruction.opcode)}${BinaryToHex(returnParam.binaryAddress)}${BinaryToHex(param1.binaryAddress)}F`,
           }
         }
       }
     }
-
+    // Compare Operation
     else if (instruction?.name.toUpperCase() === 'CMP') {
       if (param1?.name[0].toUpperCase() === 'R' && param2?.name[0].toUpperCase() === 'R') {
         if (instruction && param1 && param2) {
-          // fix error, works but won't build to production. Need 3 parameters, not two.
-          instruction.operation(param1, param2);
+          // type casting and usless parameter added to keep linter happy
+          instruction.operation(param1, param2, 0 as Register & number);
           previousInstruction = {
             name: `${instruction.name} ${param1.name} ${param2.name}`,
             hex: `0x${BinaryToHex(instruction.opcode)}0${BinaryToHex(param1.binaryAddress)}${BinaryToHex(param2.binaryAddress)}`,
+          }
+        }
+      }
+    }
+    // LOAD from input operation
+    else if (instruction?.name.toUpperCase() === 'LOADI') {
+      if (returnParam?.name[0].toUpperCase() === 'R' && inputParam !== '') {
+        if (instruction && returnParam) {
+          // type casting and usless parameter added to keep linter happy
+          instruction.operation(returnParam, new Register('', '', 0), parseInt(inputParam) as Register & number);
+          previousInstruction = {
+            name: `${instruction.name} ${returnParam.name} ${inputParam}`,
+            hex: `0x${BinaryToHex(instruction.opcode)}${BinaryToHex(returnParam.binaryAddress)}F0`,
+          }
+        }
+      }
+    }
+    // Load from memory operation
+    else if (instruction?.name.toUpperCase() === 'LOAD') {
+      if (returnParam?.name[0].toUpperCase() === 'R' && param1?.name[0].toUpperCase() === 'M') {
+        if (instruction && returnParam && param1) {
+          // type casting and usless parameter added to keep linter happy
+          instruction.operation(returnParam, param1, 0 as Register & number);
+          previousInstruction = {
+            name: `${instruction.name} ${returnParam.name} ${param1.name}`,
+            hex: `0x${BinaryToHex(instruction.opcode)}${BinaryToHex(returnParam.binaryAddress)}${BinaryToHex(param1.binaryAddress)}0`,
+          }
+        }
+      }
+    }
+    // store from register to memory operation
+    else if (instruction?.name.toUpperCase() === 'STORE') {
+      if (returnParam?.name[0].toUpperCase() === 'M' && param1?.name[0].toUpperCase() === 'R') {
+        if (instruction && returnParam && param1) {
+          // type casting and usless parameter added to keep linter happy
+          instruction.operation(returnParam, param1, 0 as Register & number);
+          previousInstruction = {
+            name: `${instruction.name} ${returnParam.name} ${param1.name}`,
+            hex: `0x${BinaryToHex(instruction.opcode)}${BinaryToHex(returnParam.binaryAddress)}${BinaryToHex(param1.binaryAddress)}0`,
           }
         }
       }
