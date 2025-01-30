@@ -1,42 +1,98 @@
 #root {
-  max-width: 1280px;
+  max-width: 1300px;
   margin: 0 auto;
-  padding: 2rem;
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.instruction-bar > * {
+  padding-left: 4px;
+  padding-right: 4px;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.information-container {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  justify-content: space-evenly;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+/* previous instructions styles */
+
+.previous-instructions-list-container {
+  display: flex;
+  flex-direction: column;
 }
 
-.card {
-  padding: 2em;
+.previous-instructions-list-header-container {
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: 20px;
 }
 
-.read-the-docs {
-  color: #888;
+.previous-instruction-container {
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: 20px;
+}
+
+/* Register styles */
+
+.register-list-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.register-list-header-container {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  column-gap: 20px;
+}
+
+.register-container {
+  display: grid;
+  grid-template-columns: auto auto auto 50px;
+  column-gap: 50px;
+}
+
+/* Memory address (variable) styles */
+
+.memory-address-list-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.memory-address-list-header-container {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  column-gap: 20px;
+}
+
+.memory-address-container {
+  display: grid;
+  grid-template-columns: auto auto auto 50px;
+  column-gap: 50px;
+}
+
+/* Flags style */ 
+
+.flag-list-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.flag-list-header-container {
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: 20px;
+}
+
+.flag-container {
+  display: grid;
+  grid-template-columns: auto auto;
+}
+
+/* Error styles */
+
+.error-text {
+  color: lightcoral;
 }

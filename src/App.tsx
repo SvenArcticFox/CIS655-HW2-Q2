@@ -356,7 +356,7 @@ export default function App() {
 
   return (
     <>
-      <div>
+      <div className='instruction-bar'>
         <label htmlFor='operation' >Operation:</label>
         <select
           name='operation'
@@ -437,71 +437,79 @@ export default function App() {
         <p className='error-text'>Error: {error}</p>
       </div> : <></>}
 
-      <div className='previous-instructions-list-container'>
-        <p className='previous-instructions-list-header'>Previous Instructions</p>
-          <div className='previous-instructions-list-header-container'>
-            <p className='previous-instructions-name-header'>Code</p>
-            <p className='previous-instructions-hex-header'>Hex</p>
-          </div>
-
-          {previousInstructions.map((prevInst) => (
-            <div key={Math.random()} className='previous-instruction-container'>
-              <p className='previous-instruction-name'>{prevInst.name}</p>
-              <p className='previous-instruction-hex'>{prevInst.hex}</p>
+      <div className='information-container'>
+        <div className='previous-instructions-list-container'>
+          <p className='previous-instructions-list-header'>Previous Instructions</p>
+            <div className='previous-instructions-list-header-container'>
+              <p className='previous-instructions-name-header'>Code</p>
+              <p className='previous-instructions-hex-header'>Hex</p>
             </div>
-          ))}
-      </div>
-      
-      <div className='register-list-container'>
-          <p className='register-list-header'>Registers</p>
-          <div className='register-list-header-container'>
-            <p className='register-name-header'>Name</p>
-            <p className='register-address-binary-header'>Binary Address</p>
-            <p className='register-address-hex-header'>Hex Address</p>
-            <p className='register-value-header'>Value</p>
-          </div>
-          {registerListState.map((register) => (
-            <div key={register.name} className='register-container'>
-              <p className='register-name'>{register.name}</p>
-              <p className='register-binary-address'>{register.binaryAddress}</p>
-              <p className='register-hex-address'>{BinaryToHex(register.binaryAddress)}</p>
-              <p className='register-value'>{register.value}</p>
+
+            {previousInstructions.map((prevInst) => (
+              <div key={Math.random()} className='previous-instruction-container'>
+                <p className='previous-instruction-name'>{prevInst.name}</p>
+                <p className='previous-instruction-hex'>{prevInst.hex}</p>
+              </div>
+            ))}
+        </div>
+        
+        <div className='register-list-container'>
+            <p className='register-list-header'>Registers</p>
+            <div className='register-list-header-container'>
+              <p className='register-name-header'>Name</p>
+              <p className='register-address-binary-header'>Binary Address</p>
+              <p className='register-address-hex-header'>Hex Address</p>
+              <p className='register-value-header'>Value</p>
             </div>
-          ))}
-      </div>
+            {registerListState.map((register) => (
+              <div key={register.name} className='register-container'>
+                <p className='register-name'>{register.name}</p>
+                <p className='register-binary-address'>{register.binaryAddress}</p>
+                <p className='register-hex-address'>{BinaryToHex(register.binaryAddress)}</p>
+                <p className='register-value'>{register.value}</p>
+              </div>
+            ))}
+        </div>
 
-      <div className='memory-address-list-container'>
-        <p className='memory-address-list-header'>Memory Addresses</p>
-          <div className='memory-address-list-header-container'>
-            <p className='memory-address-name-header'>Name</p>
-            <p className='memory-address-address-binary-header'>Binary Address</p>
-            <p className='memory-address-address-hex-header'>Hex Address</p>
-            <p className='memory-address-value-header'>Value</p>
-          </div>
-
-          {memoryVarListState.map((memVar) => (
-            <div key={memVar.name} className='memory-address-container'>
-              <p className='memory-address-name'>{memVar.name}</p>
-              <p className='memory-address-binary-address'>{memVar.binaryAddress}</p>
-              <p className='memory-address-hex-address'>{BinaryToHex(memVar.binaryAddress)}</p>
-              <p className='memory-address-value'>{memVar.value}</p>
+        <div className='memory-address-list-container'>
+          <p className='memory-address-list-header'>Memory Addresses</p>
+            <div className='memory-address-list-header-container'>
+              <p className='memory-address-name-header'>Name</p>
+              <p className='memory-address-address-binary-header'>Binary Address</p>
+              <p className='memory-address-address-hex-header'>Hex Address</p>
+              <p className='memory-address-value-header'>Value</p>
             </div>
-          ))}
-      </div>
 
-      <div className='flag-list-container'>
-        <p className='flag-list-header'>Flags</p>
-          <div className='flag-list-header-container'>
-            <p className='flag-name-header'>Name</p>
-            <p className='flag-status-header-'>Status</p>
-          </div>
+            {memoryVarListState.map((memVar) => (
+              <div key={memVar.name} className='memory-address-container'>
+                <p className='memory-address-name'>{memVar.name}</p>
+                <p className='memory-address-binary-address'>{memVar.binaryAddress}</p>
+                <p className='memory-address-hex-address'>{BinaryToHex(memVar.binaryAddress)}</p>
+                <p className='memory-address-value'>{memVar.value}</p>
+              </div>
+            ))}
+              <div className='memory-address-container'>
+                <p className='memory-address-name'>Input</p>
+                <p className='memory-address-binary-address'>1111</p>
+                <p className='memory-address-hex-address'>{BinaryToHex('1111')}</p>
+                <p className='memory-address-value'>{inputParam}</p>
+              </div>
+        </div>
 
-          {flagListState.map((flag) => (
-            <div key={flag.name} className='flag-container'>
-              <p className='flag-name'>{flag.name}</p>
-              <p className='flag-status'>{flag.status ? '1' : '0'}</p>
+        <div className='flag-list-container'>
+          <p className='flag-list-header'>Flags</p>
+            <div className='flag-list-header-container'>
+              <p className='flag-name-header'>Name</p>
+              <p className='flag-status-header-'>Status</p>
             </div>
-          ))}
+
+            {flagListState.map((flag) => (
+              <div key={flag.name} className='flag-container'>
+                <p className='flag-name'>{flag.name}</p>
+                <p className='flag-status'>{flag.status ? '1' : '0'}</p>
+              </div>
+            ))}
+        </div>
       </div>
 
     </>
