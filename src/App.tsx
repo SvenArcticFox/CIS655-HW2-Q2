@@ -11,7 +11,6 @@ export default function App() {
   // Store previous instructions here
   const [previousInstructions, setPreviousInstructions] = useState(new Array<PreviousInstruction>);
 
-  // const instructionList: Instruction[] = [];
   // Create Registers
   const [registerListState] = useState([
     new Register('0001', 'R1', 1),
