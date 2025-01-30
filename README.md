@@ -26,7 +26,7 @@ Select instruction, parameters, and enter an input parameter if the instruction 
 | STORE | Memory Address | Register | None | No | Stores a value from a register into a memory address. This value is removed from the register. |
 | SHIFTL | Register | Register | None | Yes | Performs a bitwise shift to the left based on the specified numerical input. |
 | SHIFTR | Register | Register | None | Yes | Performs a bitwise shift to the Right based on the specified numerical input. |
-| CPM | None | Register | Register | No | Compares to registers and sets the appropriate flag. |
+| CMP | None | Register | Register | No | Compares to registers and sets the appropriate flag. |
 
 ## Flags
 
