@@ -150,6 +150,7 @@ export default function App() {
   const [selectedParam1, setSelectedParam1] = useState('');
   const [selectedParam2, setSelectedParam2] = useState('');
   const [inputParam, setInputParam] = useState('');
+  const [error, setError] = useState('');
 
   const executeInstruction = useCallback(() => {
 
@@ -190,6 +191,18 @@ export default function App() {
               }
           }
       }
+      else {
+        if (returnParam?.name[0].toUpperCase() !== 'R') {
+          setError('Register not selected as return parameter. Select a register for the return parameter.');
+        }
+        else if (param1?.name[0].toUpperCase() !== 'R') {
+          setError('Register not selected as parameter 1. Select a register for parameter 1.');
+        }
+        else if (param2?.name[0].toUpperCase() !== 'R') {
+          setError('Register not selected as parameter 2. Select a register for parameter 2.');
+        }
+        return;
+      }
     }
     // Shift operations
     else if (instruction?.name.toUpperCase() === 'SHIFTL' || instruction?.name.toUpperCase() === 'SHIFTR') {
@@ -206,6 +219,18 @@ export default function App() {
           }
         }
       }
+      else {
+        if (returnParam?.name[0].toUpperCase() !== 'R') {
+          setError('Register not selected as return parameter. Select a register for the return parameter.');
+        }
+        else if (param1?.name[0].toUpperCase() !== 'R') {
+          setError('Register not selected as parameter 1. Select a register for parameter 1.');
+        }
+        else if (inputParam === '') {
+          setError('No number input parameter. Enter a number as the input parameter.');
+        }
+        return;
+      }
     }
     // Compare Operation
     else if (instruction?.name.toUpperCase() === 'CMP') {
@@ -218,6 +243,15 @@ export default function App() {
             hex: `0x${BinaryToHex(instruction.opcode)}0${BinaryToHex(param1.binaryAddress)}${BinaryToHex(param2.binaryAddress)}`,
           }
         }
+      }
+      else {
+        if (param1?.name.toUpperCase() !== 'R') {
+          setError('Register not selected as parameter 1. Select a register for parameter 1.');
+        }
+        else if (param2?.name.toUpperCase() !== 'R') {
+          setError('Register not selected as parameter 2. Select a register for parameter 2.');
+        }
+        return;
       }
     }
     // LOAD from input operation
@@ -232,6 +266,15 @@ export default function App() {
           }
         }
       }
+      else {
+        if (returnParam?.name[0].toUpperCase() !== 'R') {
+          setError('Register not selected as return parameter. Select a register for the return parameter.');
+        }
+        else if (inputParam === '') {
+          setError('No number input parameter. Enter a number as the input parameter.');
+        }
+        return;
+      }
     }
     // Load from memory operation
     else if (instruction?.name.toUpperCase() === 'LOAD') {
@@ -244,6 +287,15 @@ export default function App() {
             hex: `0x${BinaryToHex(instruction.opcode)}${BinaryToHex(returnParam.binaryAddress)}${BinaryToHex(param1.binaryAddress)}0`,
           }
         }
+      }
+      else {
+        if (returnParam?.name[0].toUpperCase() !== 'R') {
+          setError('Register not selected as return parameter. Select a register for the return parameter.');
+        }
+        else if (param1?.name[0].toUpperCase() !== 'M') {
+          setError('Memory address not selected as parameter 1. Select a memory address for parameter 1.');
+        }
+        return;
       }
     }
     // store from register to memory operation
@@ -258,9 +310,23 @@ export default function App() {
           }
         }
       }
+      else {
+        if (returnParam?.name[0].toUpperCase() !== 'M') {
+          setError('Memory address not selected as return parameter. Select a memory address for the return parameter.');
+        }
+        else if (param1?.name[0].toUpperCase() !== 'R') {
+          setError('Register not selected as parameter 1. Select a register for parameter 1.');
+        }
+        return;
+      }
+    }
+    else {
+      setError('No instruction selected');
+      return;
     }
     const tempPrevInstructs = previousInstructions.slice();
     tempPrevInstructs.push(previousInstruction);
+    setError('');
     setPreviousInstructions(tempPrevInstructs);
 
 
@@ -346,6 +412,25 @@ export default function App() {
           </input>
         <button onClick={executeInstruction}>Execute Instruction</button>
       </div>
+
+      {error !== '' ? <div className='error-container'>
+        <p className='error-text'>Error: {error}</p>
+      </div> : <></>}
+
+      <div className='previous-instructions-list-container'>
+        <p className='previous-instructions-list-header'>Previous Instructions</p>
+          <div className='previous-instructions-list-header-container'>
+            <p className='previous-instructions-name-header'>Code</p>
+            <p className='previous-instructions-hex-header'>Hex</p>
+          </div>
+
+          {previousInstructions.map((prevInst) => (
+            <div key={Math.random()} className='previous-instruction-container'>
+              <p className='previous-instruction-name'>{prevInst.name}</p>
+              <p className='previous-instruction-hex'>{prevInst.hex}</p>
+            </div>
+          ))}
+      </div>
       
       <div className='register-list-container'>
           <p className='register-list-header'>Registers</p>
@@ -395,21 +480,6 @@ export default function App() {
             <div key={flag.name} className='flag-container'>
               <p className='flag-name'>{flag.name}</p>
               <p className='flag-status'>{flag.status ? '1' : '0'}</p>
-            </div>
-          ))}
-      </div>
-
-      <div className='previous-instructions-list-container'>
-        <p className='previous-instructions-list-header'>Previous Instructions</p>
-          <div className='previous-instructions-list-header-container'>
-            <p className='previous-instructions-name-header'>Code</p>
-            <p className='previous-instructions-hex-header'>Hex</p>
-          </div>
-
-          {previousInstructions.map((prevInst) => (
-            <div key={Math.random()} className='previous-instruction-container'>
-              <p className='previous-instruction-name'>{prevInst.name}</p>
-              <p className='previous-instruction-hex'>{prevInst.hex}</p>
             </div>
           ))}
       </div>
