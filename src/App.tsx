@@ -191,13 +191,17 @@ export default function App() {
               }
           }
       }
+      // Error handling
       else {
+        // If return param is not a register
         if (returnParam?.name[0].toUpperCase() !== 'R') {
           setError('Register not selected as return parameter. Select a register for the return parameter.');
         }
+        // If param1 is not a register
         else if (param1?.name[0].toUpperCase() !== 'R') {
           setError('Register not selected as parameter 1. Select a register for parameter 1.');
         }
+         // If param2 is not a register
         else if (param2?.name[0].toUpperCase() !== 'R') {
           setError('Register not selected as parameter 2. Select a register for parameter 2.');
         }
@@ -219,13 +223,17 @@ export default function App() {
           }
         }
       }
+      // Error handling
       else {
+         // If return param is not a register
         if (returnParam?.name[0].toUpperCase() !== 'R') {
           setError('Register not selected as return parameter. Select a register for the return parameter.');
         }
+         // If param1 is not a register
         else if (param1?.name[0].toUpperCase() !== 'R') {
           setError('Register not selected as parameter 1. Select a register for parameter 1.');
         }
+        // If input param is blank or not a number (number controlled through HTML)
         else if (inputParam === '') {
           setError('No number input parameter. Enter a number as the input parameter.');
         }
@@ -236,7 +244,7 @@ export default function App() {
     else if (instruction?.name.toUpperCase() === 'CMP') {
       if (param1?.name[0].toUpperCase() === 'R' && param2?.name[0].toUpperCase() === 'R') {
         if (instruction && param1 && param2) {
-          // type casting and usless parameter added to keep linter happy
+          // type casting and useless parameter added to keep linter happy
           instruction.operation(param1, param2, 0 as Register & number);
           previousInstruction = {
             name: `${instruction.name} ${param1.name} ${param2.name}`,
@@ -244,10 +252,13 @@ export default function App() {
           }
         }
       }
+      // Error handling
       else {
+         // If param1 is not a register
         if (param1?.name.toUpperCase() !== 'R') {
           setError('Register not selected as parameter 1. Select a register for parameter 1.');
         }
+         // If param2 is not a register
         else if (param2?.name.toUpperCase() !== 'R') {
           setError('Register not selected as parameter 2. Select a register for parameter 2.');
         }
@@ -258,7 +269,7 @@ export default function App() {
     else if (instruction?.name.toUpperCase() === 'LOADI') {
       if (returnParam?.name[0].toUpperCase() === 'R' && inputParam !== '') {
         if (instruction && returnParam) {
-          // type casting and usless parameter added to keep linter happy
+          // type casting and useless parameter added to keep linter happy
           instruction.operation(returnParam, new Register('', '', 0), parseInt(inputParam) as Register & number);
           previousInstruction = {
             name: `${instruction.name} ${returnParam.name} ${inputParam}`,
@@ -266,10 +277,13 @@ export default function App() {
           }
         }
       }
+      // Error handling
       else {
+         // If return param is not a register
         if (returnParam?.name[0].toUpperCase() !== 'R') {
           setError('Register not selected as return parameter. Select a register for the return parameter.');
         }
+         // If input param is blank or not a number (number controlled through HTML)
         else if (inputParam === '') {
           setError('No number input parameter. Enter a number as the input parameter.');
         }
@@ -280,7 +294,7 @@ export default function App() {
     else if (instruction?.name.toUpperCase() === 'LOAD') {
       if (returnParam?.name[0].toUpperCase() === 'R' && param1?.name[0].toUpperCase() === 'M') {
         if (instruction && returnParam && param1) {
-          // type casting and usless parameter added to keep linter happy
+          // type casting and useless parameter added to keep linter happy
           instruction.operation(returnParam, param1, 0 as Register & number);
           previousInstruction = {
             name: `${instruction.name} ${returnParam.name} ${param1.name}`,
@@ -288,10 +302,13 @@ export default function App() {
           }
         }
       }
+      // Error handling
       else {
+        // If return param is not a register
         if (returnParam?.name[0].toUpperCase() !== 'R') {
           setError('Register not selected as return parameter. Select a register for the return parameter.');
         }
+        // If param1 is not a memory address
         else if (param1?.name[0].toUpperCase() !== 'M') {
           setError('Memory address not selected as parameter 1. Select a memory address for parameter 1.');
         }
@@ -302,7 +319,7 @@ export default function App() {
     else if (instruction?.name.toUpperCase() === 'STORE') {
       if (returnParam?.name[0].toUpperCase() === 'M' && param1?.name[0].toUpperCase() === 'R') {
         if (instruction && returnParam && param1) {
-          // type casting and usless parameter added to keep linter happy
+          // type casting and useless parameter added to keep linter happy
           instruction.operation(returnParam, param1, 0 as Register & number);
           previousInstruction = {
             name: `${instruction.name} ${returnParam.name} ${param1.name}`,
@@ -310,16 +327,20 @@ export default function App() {
           }
         }
       }
+      // Error handling
       else {
+        // If return param is not a memory address
         if (returnParam?.name[0].toUpperCase() !== 'M') {
           setError('Memory address not selected as return parameter. Select a memory address for the return parameter.');
         }
+        // If param1 is not a register
         else if (param1?.name[0].toUpperCase() !== 'R') {
           setError('Register not selected as parameter 1. Select a register for parameter 1.');
         }
         return;
       }
     }
+    // If instruction is not elected
     else {
       setError('No instruction selected');
       return;
