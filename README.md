@@ -2,9 +2,11 @@
 This repository contains the code for Syracuse class CISS 655, assingment 2 question 2.
 This is a react webapp that is an editor for our own custom CPU instruction set.
 
+By Trevor Radez, Robert Nugent Jr, Kalinskie Gilliam, Karthiga Ravichandran, Michael Fireston, and Matthew Lukaszewski
+
 ## Setup
 1. Install the latest version of NodeJS https://nodejs.org/en/download
-2. Clone this repo
+2. Clone this repo https://github.com/SvenArcticFox/CIS655-HW2-Q2
 3. Run `npm install` to install all dependencies.
 4. Run `npm run dev` to run this web app in development mode
 5. Open a web browser and go to http://localhost:5173
@@ -26,7 +28,7 @@ Select instruction, parameters, and enter an input parameter if the instruction 
 | STORE | 8 | Memory Address | Register | None | No | Stores a value from a register into a memory address. This value is removed from the register. |
 | SHIFTL | 9 | Register | Register | None | Yes | Performs a bitwise shift to the left based on the specified numerical input. |
 | SHIFTR | A | Register | Register | None | Yes | Performs a bitwise shift to the Right based on the specified numerical input. |
-| CMP | B | None | Register | Register | No | Compares to registers and sets the appropriate flag. |
+| CMP | B | None | Register | Register | No | Compares two registers and sets the appropriate flag. |
 
 ## Flags
 
