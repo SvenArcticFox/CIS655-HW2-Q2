@@ -19,10 +19,10 @@ Select instruction, parameters, and enter an input parameter if the instruction 
 | Instruction | Hex Opcode | Return Parmeter | Parameter 1 | Parameter 2| Input Parameter Required | Description | 
 | ------------| -----------| -----------|  ----------- | -----------| ----------- | -----------|
 | ADD | 1 | Register | Register | Register | No | Adds values from two registers and returns the sum to the return register. Sets zero flag if returned value is zero. |
-| SUB | 2 | Register | Register | Register | No | Subtracts values from two registers and returns the sum to the return register. Sets zero flag if returned value is zero. |
-| MPY | 3 | Register | Register | Register | No | Multiplies values from two registers and returns the sum to the return register. Sets zero flag if returned value is zero. |
-| DIV | 4 | Register | Register | Register | No | Performs integer division on values from two registers and returns the sum to the return register. Sets zero flag if returned value is zero. |
-| MOD | 5 | Register | Register | Register | No | Calculates the remainder from dividing values from two registers and returns the sum to the return register. Sets zero flag if returned value is zero. |
+| SUB | 2 | Register | Register | Register | No | Subtracts values from two registers and returns the difference to the return register. Sets zero flag if returned value is zero. |
+| MPY | 3 | Register | Register | Register | No | Multiplies values from two registers and returns the product to the return register. Sets zero flag if returned value is zero. |
+| DIV | 4 | Register | Register | Register | No | Performs integer division on values from two registers and returns the quotient to the return register. Sets zero flag if returned value is zero. |
+| MOD | 5 | Register | Register | Register | No | Calculates the remainder from dividing values from two registers and returns the remainder to the return register. Sets zero flag if returned value is zero. |
 | LOAD | 6 | Register | Memory Address | None | No | Loads a value from a memory address and places it in the return register. Removes value from memory address. |
 | LOADI | 7 | Register | None | None | Yes | Loads a value from input and places it in the return register. This memory address is F or 1111. |
 | STORE | 8 | Memory Address | Register | None | No | Stores a value from a register into a memory address. This value is removed from the register. |
